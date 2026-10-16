@@ -1,0 +1,4 @@
+- Shared database: iKIDZ CRM uses the iKIDZ Supabase project (same auth users, same RLS helpers such as `can_manage_creche`, `has_role`). Migrations live only in the iKIDZ repo (`supabase/migrations/`); CRM tables are prefixed `crm_` with RLS on. `src/integrations/supabase/types.ts` is copied from iKIDZ after each migration.
+- Access: the `_authenticated` layout requires a session and shows the app only to `canManage` users (admin or director, `src/lib/auth.ts`); data visibility comes from RLS (admin: network, director: own creche).
+- Cross links to iKIDZ use `IKIDZ_URL` (`src/lib/links.ts`, `VITE_IKIDZ_URL` at build). Auth emails go through the iKIDZ Send Email hook (one per Supabase project); the CRM URL must be in Supabase Auth redirect URLs.
+- Builds use the Nitro `node-server` preset (Clever Cloud: `npm run build` then `npm run start`); `src/start.ts` copies public `VITE_SUPABASE_*` values into `process.env.SUPABASE_*` when missing at runtime.
